@@ -6,7 +6,9 @@ services:
     region: oregon
 
     # Build e inicialização no Render
-    buildCommand: npm ci && npm run build
+    # --include=dev é obrigatório: o NODE_ENV=production abaixo faria o npm ci
+    # ignorar as devDependencies, e é nelas que ficam tailwindcss e typescript.
+    buildCommand: npm ci --include=dev && npm run build
     startCommand: npm start
     healthCheckPath: /api/health
 
