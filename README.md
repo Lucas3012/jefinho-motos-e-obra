@@ -23,12 +23,31 @@ Feito com **Next.js 16** + **Supabase** (banco de dados e login) e publicado no 
 
 **Banco de dados (Supabase):**
 
-- `categories` — categorias de peças e materiais
-- `products` — produtos (peças e materiais)
-- `services` — serviços da oficina
-- `quotes` — pedidos de orçamento feitos pelo site
-- `appointments` — agendamentos de serviço
-- `messages` — mensagens do formulário de contato
+Todas as tabelas usam o prefixo **`jm_`** de propósito — assim elas convivem com as tabelas de
+outros projetos sem se misturar.
+
+| Tabela | O que guarda |
+| --- | --- |
+| `jm_categories` | categorias de peças e materiais |
+| `jm_products` | produtos (peças e materiais) |
+| `jm_services` | serviços da oficina |
+| `jm_quotes` | pedidos de orçamento feitos pelo site |
+| `jm_appointments` | agendamentos de serviço |
+| `jm_messages` | mensagens do formulário de contato |
+
+---
+
+## 🌐 Site no ar
+
+| | |
+| --- | --- |
+| **Site** | <https://jefinho-motos-e-obra.onrender.com> |
+| **Painel** | <https://jefinho-motos-e-obra.onrender.com/login> |
+| **Repositório** | <https://github.com/Lucas3012/jefinho-motos-e-obra> |
+| **Banco** | Supabase `lojavirtual` (compartilhado com o site Lojavirtual) |
+
+> ⚠️ O banco é **compartilhado** com outro site, por isso o prefixo `jm_`. Nunca use
+> `drop table` fora das tabelas que começam com `jm_`.
 
 ---
 
@@ -69,25 +88,30 @@ git push -u origin main
 6. Vá em **Authentication → Users → Add user**:
    - marque **Auto Confirm User**
    - informe o e-mail e a senha que você vai usar no painel (`/login`)
-7. Vá em **Project Settings → API** e copie:
+7. Vá em **Project Settings → API Keys** e copie:
    - **Project URL**
-   - **anon public** key
-   - **service_role** key
+   - a chave **publishable** (`sb_publishable_...`) — é ela que vai no lugar da antiga `anon`
+   - a chave **service_role**
+   - ⚠️ Neste projeto a chave `anon` legada (JWT) está **desativada** e devolve erro `401`.
+     Use sempre a `sb_publishable_...`.
 
 ### 4. Publicar no Render
 
 1. Acesse <https://render.com> e crie uma conta (o plano **Free** funciona).
 2. Clique em **New → Blueprint** e conecte o repositório do GitHub criado no passo 2.
 3. O Render vai ler o arquivo `render.yaml` e criar o serviço automaticamente.
-4. Adicione as variáveis de ambiente no painel do Render
-   (**Environment → Environment Variables**):
+4. Confira as variáveis de ambiente em **Environment → Environment Variables**:
 
-   | Variável | Valor |
-   | --- | --- |
-   | `NEXT_PUBLIC_SUPABASE_URL` | `https://SEU-PROJETO.supabase.co` |
-   | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | chave **anon public** |
-   | `SUPABASE_SERVICE_ROLE_KEY` | chave **service_role** |
-   | `NEXT_PUBLIC_WHATSAPP` | `5511999999999` (com DDI e DDD) |
+   | Variável | Onde fica | Valor |
+   | --- | --- | --- |
+   | `NEXT_PUBLIC_SUPABASE_URL` | no `render.yaml` | `https://icchspesfqmeakbajlfh.supabase.co` |
+   | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | no `render.yaml` | chave **publishable** (`sb_publishable_...`) |
+   | `NEXT_PUBLIC_SITE_URL` | no `render.yaml` | endereço do site |
+   | `NEXT_PUBLIC_WHATSAPP` | **painel do Render** | `55` + DDD + número |
+   | `SUPABASE_SERVICE_ROLE_KEY` | **painel do Render** | chave **service_role** (segredo) |
+
+   As duas últimas ficam com `sync: false`, ou seja: você edita pelo painel do Render e o
+   `render.yaml` não sobrescreve. **Nunca** cole a `service_role` no repositório.
 
 5. Clique em **Deploy**. Em alguns minutos o site fica no ar em
    `https://jefinho-motos-e-obra.onrender.com`.
@@ -95,6 +119,10 @@ git push -u origin main
 > **Importante:** o Render precisa das variáveis de ambiente **antes** do build, senão o site
 > sobe em modo demonstração (com produtos de exemplo). Se isso acontecer, basta clicar em
 > **Manual Deploy → Clear build cache & deploy**.
+>
+> **Também importante:** o `buildCommand` precisa ser `npm ci --include=dev` porque o
+> `NODE_ENV=production` faz o `npm ci` pular as devDependencies (onde estão `tailwindcss`,
+> `@tailwindcss/postcss` e `typescript`). Já está correto no `render.yaml`.
 
 ### 5. Rodando o site no seu computador
 
@@ -149,7 +177,18 @@ export const SITE = {
 ### Produtos, categorias e serviços
 
 - **Pelo painel** (`/admin`) → produtos
-- **Pelo Supabase** → tabelas `categories` e `services` no SQL Editor
+- **Pelo Supabase** → tabelas `jm_categories` e `jm_services` no SQL Editor
+
+### Como publicar uma alteração
+
+```bash
+git add .
+git commit -m "descreva o que mudou"
+git push origin main
+```
+
+O Render detecta o `git push` e faz o deploy sozinho (`autoDeploy: true` no `render.yaml`),
+em 2 a 4 minutos. Você acompanha em <https://dashboard.render.com>.
 
 ### Cores da marca
 
@@ -188,11 +227,25 @@ jefinho-motos-e-obra/
 
 ## ✅ Checklist antes de publicar
 
-- [ ] Criar conta no **Supabase** e rodar o `supabase/schema.sql`
-- [ ] Criar o usuário administrador em **Authentication → Users**
-- [ ] Subir o código para o **GitHub**
-- [ ] Criar o **Blueprint** no Render
-- [ ] Configurar as variáveis de ambiente no Render
+- [x] Criar conta no **Supabase** e rodar o `supabase/schema.sql`
+- [x] Criar o usuário administrador em **Authentication → Users**
+- [x] Subir o código para o **GitHub**
+- [x] Criar o **Blueprint** no Render
+- [x] Configurar as variáveis de ambiente no Render
 - [ ] Trocar telefone, endereço e horários em `src/lib/site.ts`
+- [ ] Trocar o número do **WhatsApp** (painel do Render → `NEXT_PUBLIC_WHATSAPP`)
+- [ ] Trocar a **senha** do painel em **Supabase → Authentication → Users**
 - [ ] Substituir os produtos de exemplo pelos reais (painel `/admin`)
 - [ ] Testar o formulário de contato e o agendamento
+
+---
+
+## 🔐 Credenciais do painel
+
+| | |
+| --- | --- |
+| URL | <https://jefinho-motos-e-obra.onrender.com/login> |
+| E-mail | `lukinhas87.let@gmail.com` |
+| Senha | `JefinhoMotos2026` |
+
+> **Troque essa senha** em Supabase → **Authentication → Users** → usuário → *Reset password*.
