@@ -1,0 +1,222 @@
+@import "tailwindcss";
+
+/* =====================================================================
+   Paleta da marca — laranja de oficina + tom de obra
+   ===================================================================== */
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-display: var(--font-barlow), var(--font-inter), ui-sans-serif,
+    system-ui, sans-serif;
+
+  --color-brand-50: #fff8ed;
+  --color-brand-100: #ffefd4;
+  --color-brand-200: #ffdba8;
+  --color-brand-300: #ffc071;
+  --color-brand-400: #ff9938;
+  --color-brand-500: #ff7a11;
+  --color-brand-600: #f05f07;
+  --color-brand-700: #c74508;
+  --color-brand-800: #9e370e;
+  --color-brand-900: #7f2f0f;
+  --color-brand-950: #451506;
+
+  --color-ink-950: #0b0a09;
+  --color-ink-900: #16130f;
+  --color-ink-800: #211d18;
+  --color-ink-700: #332c24;
+
+  --color-steel-50: #f5f7f7;
+  --color-steel-100: #e4e9e8;
+  --color-steel-200: #cbd4d3;
+  --color-steel-500: #6b7a78;
+}
+
+/* =====================================================================
+   Base
+   ===================================================================== */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-ink-950);
+    color: #f5f2ee;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--color-brand-500);
+    color: #1a0d02;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-500);
+    outline-offset: 2px;
+  }
+}
+
+/* =====================================================================
+   Utilitários próprios
+   ===================================================================== */
+@utility container-site {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 76rem;
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .container-site {
+    padding-inline: 2rem;
+  }
+}
+
+/* Textura de chapa de aço / garagem */
+@utility surface-metal {
+  background-image: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.04) 0%,
+      rgba(255, 255, 255, 0) 100%
+    ),
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.025) 0px,
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px,
+      transparent 7px
+    );
+  background-color: var(--color-ink-900);
+}
+
+@utility surface-grid {
+  background-image: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.045) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 42px 42px;
+}
+
+@utility text-balance-tight {
+  text-wrap: balance;
+}
+
+@utility card {
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+@utility label-field {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-steel-200);
+  margin-bottom: 0.375rem;
+}
+
+@utility input-field {
+  width: 100%;
+  border-radius: 0.625rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background-color: rgba(0, 0, 0, 0.35);
+  padding: 0.625rem 0.875rem;
+  font-size: 0.9375rem;
+  color: #fff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input-field::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--color-brand-500);
+  box-shadow: 0 0 0 3px rgba(255, 122, 17, 0.18);
+}
+
+@utility btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  background-color: var(--color-brand-500);
+  color: #1a0d02;
+  font-weight: 700;
+  padding: 0.7rem 1.25rem;
+  font-size: 0.9375rem;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-brand-400);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@utility btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #f5f2ee;
+  font-weight: 600;
+  padding: 0.7rem 1.25rem;
+  font-size: 0.9375rem;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-ghost:hover {
+  background-color: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+/* Faixa de alerta / destaque */
+@utility badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 122, 17, 0.35);
+  background-color: rgba(255, 122, 17, 0.1);
+  color: var(--color-brand-300);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-fade-up {
+  animation: fade-up 0.5s ease both;
+}

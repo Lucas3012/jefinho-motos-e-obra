@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: jefinho-motos-e-obra
+    runtime: node
+    plan: free
+    region: oregon
+
+    # Build e inicialização no Render
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+
+    # Discos persistentes / auto-deploy a partir do GitHub
+    autoDeploy: true
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_SITE_URL
+        value: https://jefinho-motos-e-obra.onrender.com
+      # ---- Supabase (preencha no painel do Render ou sincronize do repo) ----
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: NEXT_PUBLIC_WHATSAPP
+        sync: false

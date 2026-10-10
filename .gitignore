@@ -1,0 +1,29 @@
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# env files (NUNCA suba suas chaves para o GitHub)
+.env
+.env.local
+.env.*.local
+
+# vercel / render
+.vercel
+
+# debug
+npm-debug.log*
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# ide
+.vscode
+.idea
+.DS_Store
