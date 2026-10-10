@@ -20,12 +20,15 @@ services:
         value: production
       - key: NEXT_PUBLIC_SITE_URL
         value: https://jefinho-motos-e-obra.onrender.com
-      # ---- Supabase (preencha no painel do Render ou sincronize do repo) ----
+      # A URL e a chave publicável do Supabase NÃO são segredos (elas vão
+      # embutidas no JavaScript do navegador), por isso ficam aqui no repo.
       - key: NEXT_PUBLIC_SUPABASE_URL
-        sync: false
+        value: https://icchspesfqmeakbajlfh.supabase.co
       - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
-        sync: false
-      - key: SUPABASE_SERVICE_ROLE_KEY
-        sync: false
+        value: sb_publishable_f6m6zg_Lu0ZsFlZNPngfDw_gATzwmz2
+      # >>> troque pelo WhatsApp real da loja, no painel do Render <<<
       - key: NEXT_PUBLIC_WHATSAPP
+        sync: false
+      # Segredo de verdade: fica só no painel do Render, nunca no repo.
+      - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
